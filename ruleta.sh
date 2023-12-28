@@ -12,6 +12,7 @@ grayColour="\e[0;37m\033[1m"
 function ctrl_c() {
     echo -e "\n\n ${redColour}[!] ${endColour}${greenColour}Saliendo...${endColour} \n"
     exit 1
+    tput cnorm
 }
 
 #CTRL+c
@@ -31,8 +32,34 @@ function helpPanel() {
 function martingala() {
     echo -e "\t \n ${greenColour}Dinero Actual: ${endColour}${redColour}${money} ${endColour}${greenColour}Euros ${endColour} \n"
     echo -ne "${greenColour}¿Cuanto Dinero quieres apostar?${endColour} --> " && read initial_bet
-    echo -ne "${greenColour}A que deseas apostar siempre, PAR o IMPAR? ${endColour}--> " && read par_impar
-    echo -e "${greenColour}Vamos a jugar con una cantidad de${endColour} ${redColour}$initial_bet${endColour}${greenColour} Euros a los números que son ${endColour}${redColour}$par_impar${endColour}. \n"
+    echo -ne "${greenColour}A que deseas apostar siempre, PAR o IMPAR? ${endColour}--> \n" && read par_impar
+
+    tput civis #esto es para sacar el cursor
+    echo -e "${greenColour}SALDO INICIAL: ${endColour} ${yellowColour}$(($money - $initial_bet))${endColour}${greenColour} Euros.${endColour}"
+    echo -e "${greenColour}APOSTADO: ${endColour} ${yellowColour}$initial_bet${endColour}${greenColour} Euros!${endColour}\n"
+    while true; do
+        randomNumber="$(($RANDOM % 37))"   #CALCULAMOS EL RANDOM
+        if [ "$par_impar" == "par" ]; then #check if the option is par(even)
+            if [ "$(($randomNumber % 2))" -eq 0 ]; then
+                if [ $randomNumber -eq 0 ]; then
+                    echo -e "${blueColour}hemos perdido dado que salio${yellowColour} 0 ${endColour}\n"
+                else
+                    reward="$(($initial_bet * 2))" #Dinero ganado
+                    money=$(($money + $reward))    #monto actualizado
+                    echo -e "${greenColour}GANAS!!! El número par es: ${endColour}${yellowColour}$randomNumber${endColour}"
+                    echo -e "${purpleColour}Dinero ganado: ${endColour}${yellowColour}$reward${endColour}"
+                    echo -e "${purpleColour}SALDO ACTUAL: ${endColour}${yellowColour}$money${endColour}\n"
+                fi
+            else
+                echo -e "${blueColour}es impar: ${endColour}${yellowColour} $randomNumber ${endColour}\n"
+            fi
+            sleep 3
+        else #check if the option is impar(odd)
+            echo -e "tu vieja \n"
+            sleep 3
+        fi
+    done
+    tput cnorm #Esto es para recuperar el cursor
 }
 
 #labouchere
