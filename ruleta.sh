@@ -29,8 +29,10 @@ function helpPanel() {
 }
 #martingala
 function martingala() {
-    echo -e "\t \n ${greenColour}Great!${endColour} ${grayColour}Juguemos con Martingala ${endColour}\n"
-    echo -e "\t ${grayColour} You have ${endColour}${greenColour}${money}${endColour} ${grayColour}dolars to spend in this game. ${endColour}"
+    echo -e "\t \n ${greenColour}Dinero Actual: ${endColour}${redColour}${money} ${endColour}${greenColour}Euros ${endColour} \n"
+    echo -ne "${greenColour}¿Cuanto Dinero quieres apostar?${endColour} --> " && read initial_bet
+    echo -ne "${greenColour}A que deseas apostar siempre, PAR o IMPAR? ${endColour}--> " && read par_impar
+    echo -e "${greenColour}Vamos a jugar con una cantidad de${endColour} ${redColour}$initial_bet${endColour}${greenColour} Euros a los números que son ${endColour}${redColour}$par_impar${endColour}. \n"
 }
 
 #labouchere
