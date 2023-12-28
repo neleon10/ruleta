@@ -42,7 +42,9 @@ function martingala() {
         if [ "$par_impar" == "par" ]; then #check if the option is par(even)
             if [ "$(($randomNumber % 2))" -eq 0 ]; then
                 if [ $randomNumber -eq 0 ]; then
+                    money="$(($money-$initial_bet))"
                     echo -e "${blueColour}hemos perdido dado que salio${yellowColour} 0 ${endColour}\n"
+                    echo -e "${purpleColour}SALDO ACTUAL: ${endColour}${yellowColour}$money${endColour}\n"
                 else
                     reward="$(($initial_bet * 2))" #Dinero ganado
                     money=$(($money + $reward))    #monto actualizado
