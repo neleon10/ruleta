@@ -30,37 +30,75 @@ function helpPanel() {
 }
 #martingala
 function martingala() {
-    echo -e "\t \n ${greenColour}Dinero Actual: ${endColour}${redColour}${money} ${endColour}${greenColour}Euros ${endColour} \n"
-    echo -ne "${greenColour}¿Cuanto Dinero quieres apostar?${endColour} --> " && read initial_bet
-    echo -ne "${greenColour}A que deseas apostar siempre, PAR o IMPAR? ${endColour}--> \n" && read par_impar
-
+    echo -ne "${greenColour}¿Cuanto Dinero quieres apostar?${endColour} --> " && read bet
+    echo -ne "${greenColour}A que deseas apostar siempre, "par" o "impar"? ${endColour}--> \n" && read par_impar
+    back_up_bet="$(($bet))"
     tput civis #esto es para sacar el cursor
-    echo -e "${greenColour}SALDO INICIAL: ${endColour} ${yellowColour}$(($money - $initial_bet))${endColour}${greenColour} Euros.${endColour}"
-    echo -e "${greenColour}APOSTADO: ${endColour} ${yellowColour}$initial_bet${endColour}${greenColour} Euros!${endColour}\n"
+
+    echo -e "\n${greenColour}MONTO INICIAL: ${endColour}${yellowColour}$money${endColour}"
     while true; do
-        randomNumber="$(($RANDOM % 37))"   #CALCULAMOS EL RANDOM
-        if [ "$par_impar" == "par" ]; then #check if the option is par(even)
-            if [ "$(($randomNumber % 2))" -eq 0 ]; then
-                if [ $randomNumber -eq 0 ]; then
-                    money="$(($money-$initial_bet))"
-                    echo -e "${blueColour}hemos perdido dado que salio${yellowColour} 0 ${endColour}\n"
-                    echo -e "${purpleColour}SALDO ACTUAL: ${endColour}${yellowColour}$money${endColour}\n"
+        money="$(($money - $bet))"
+        echo -e "\n${greenColour}APUESTO: ${endColour}${yellowColour}$bet${endColour}${greenColour} ME QUEDAN: ${endColour}${yellowColour}$money${endColour}\n"
+        randomNumber="$(($RANDOM % 37))" #CALCULAMOS EL RANDOM
+        if [ "$money" -gt 0 ]; then
+            if [ "$par_impar" == "par" ]; then #check if the option is par(even)
+                if [ "$(($randomNumber % 2))" -eq 0 ]; then
+                    if [ $randomNumber -eq 0 ]; then
+
+                        echo -e "${redColour}[!] ${endColour}${blueColour}PERDIMOS!!${yellowColour} 0 ${endColour}\n"
+                        echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                        bet="$(($bet * 2))"
+                    else
+                        reward="$(($bet * 2))"      #Dinero ganado
+                        money=$(($money + $reward)) #monto actualizado
+                        echo -e "${redColour}[!] ${endColour}${greenColour}GANAS!!! El número es par : ${endColour}${yellowColour}$randomNumber${endColour}"
+                        echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                        bet="$(($back_up_bet))"
+                    fi
                 else
-                    reward="$(($initial_bet * 2))" #Dinero ganado
-                    money=$(($money + $reward))    #monto actualizado
-                    echo -e "${greenColour}GANAS!!! El número par es: ${endColour}${yellowColour}$randomNumber${endColour}"
-                    echo -e "${purpleColour}Dinero ganado: ${endColour}${yellowColour}$reward${endColour}"
-                    echo -e "${purpleColour}SALDO ACTUAL: ${endColour}${yellowColour}$money${endColour}\n"
+
+                    echo -e "${redColour}[!] ${endColour}${redColour}PIERDES!!! El número es impar : ${endColour}${yellowColour}$randomNumber${endColour}"
+                    echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                    bet="$(($bet * 2))"
+
                 fi
-            else
-                echo -e "${blueColour}es impar: ${endColour}${yellowColour} $randomNumber ${endColour}\n"
+                sleep 3
+            elif [ "$par_impar" == "impar" ];then
+                if [ ! "$(($randomNumber % 2))" -eq 0 ]; then
+                    if [ $randomNumber -eq 0 ]; then
+                        echo -e "${redColour}[!] ${endColour}${blueColour}GANAS PORQUE EL CERO ES IMPAR!!${yellowColour} 0 ${endColour}\n"
+                        reward="$(($bet * 2))"      #Dinero ganado
+                        money=$(($money + $reward)) #monto actualizado
+                        echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                        bet="$(($back_up_bet))"
+                    else
+                        reward="$(($bet * 2))"      #Dinero ganado
+                        money=$(($money + $reward)) #monto actualizado
+                        echo -e "${redColour}[!] ${endColour}${greenColour}GANAS!!! El número es impar : ${endColour}${yellowColour}$randomNumber${endColour}"
+                        echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                        bet="$(($back_up_bet))"
+                    fi
+                else
+
+                    echo -e "${redColour}[!] ${endColour}${redColour}PIERDES!!! El número es par: ${endColour}${yellowColour}$randomNumber${endColour}"
+                    echo -e "\n${greenColour}MONTO ACTUAL: ${endColour}${yellowColour}$money${endColour}"
+                    bet="$(($bet * 2))"
+                    
+
+                fi
+                sleep 3
+            else #check if the option is impar(odd)
+                echo -e "\n ${redColour}[!!!] ${endColour}${greenColour}Debes introducir las opciones correctas respetando las minusculas \"par\" o \"impar\"${endColour} \n"
+                echo -e "\n\n ${redColour}[!] ${endColour}${greenColour}Redirigiendo...${endColour} \n"
+                sleep 3
+                martingala
             fi
-            sleep 3
-        else #check if the option is impar(odd)
-            echo -e "tu vieja \n"
-            sleep 3
+        else
+            echo -e "\n ${redColour}[!!!] ${endColour}${greenColour}TE QUEDASTE SIN DINERO CULEAU!!...${endColour} \n"
+            exit 1
         fi
     done
+
     tput cnorm #Esto es para recuperar el cursor
 }
 
