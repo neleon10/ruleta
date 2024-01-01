@@ -116,7 +116,10 @@ function martingala() {
 
 #labouchere
 function labouchere() {
+    declare -a myNumbers=(1 2 3 4)
+    echo -e "\t El total de elementos es -->  ${#myNumbers[@]}"
     echo -e "\t ${greenColour}Great!)${endColour} ${grayColour}Juguemos con Labouchere ${endColour}"
+    echo -e "\t ${greenColour}This is Labouchere option${endColour}"
 }
 
 while getopts "m:t:h" argumentos; do
@@ -141,5 +144,6 @@ if [ $money ] && [ $technique ]; then
         sleep 5
     fi
 else
-    helpPanel
+   helpPanel
 fi
+   
