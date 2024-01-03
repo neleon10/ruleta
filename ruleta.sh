@@ -116,10 +116,36 @@ function martingala() {
 
 #labouchere
 function labouchere() {
-    declare -a myNumbers=(1 2 3 4)
     echo -e "\t El total de elementos es -->  ${#myNumbers[@]}"
     echo -e "\t ${greenColour}Great!)${endColour} ${grayColour}Juguemos con Labouchere ${endColour}"
     echo -e "\t ${greenColour}This is Labouchere option${endColour}"
+    echo -ne "${greenColour}A que deseas apostar siempre, "par" o "impar"? ${endColour}--> \n" && read par_impar
+    back_up_bet="$(($bet))" 
+      
+   
+    while true; do	  
+	  declare -a myNumbers=(1 2 3 4)
+	  money="$(($money - $bet))"
+		
+	  if [ "$money" -gt 0 ]; then
+		if [ "par_impar"=="par" ];then
+			if [ "$(($randomNumber % 2))" -eq 0 ]; then
+				if [ $randomNumber -eq 0 ]; then
+				 	echo -e "\t ${redColour}[!] UPPS! Perdiste salio 0${endColour}"	
+					unset myNumbers[0]
+					unset myNumbers[-1]	
+					
+				fi	
+			fi
+
+		elif [ "par_impar"=="impar" ];then
+		
+		else
+		  labouchere  	
+		fi
+	  fi
+
+    done
 }
 
 while getopts "m:t:h" argumentos; do
