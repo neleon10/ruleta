@@ -116,10 +116,51 @@ function martingala() {
 
 #labouchere
 function labouchere() {
-     tput civis #esto es para sacar el cursor
-       echo "sobate"
-       
-     tput cnorm
+    echo -ne "${greenColour}A que deseas apostar siempre, "par" o "impar"? ${endColour}--> \n" && read par_impar
+    declare -a bets=(1 5 3 4)
+    tput civis #esto es para sacar el cursor
+    apuesta=""
+
+    while true; do
+        randomNumber="$(($RANDOM % 37))" #CALCULAMOS EL RANDOM
+        if [ "${#bets[@]}" -gt 1 ]; then
+            apuesta=$((${bets[0]} + ${bets[-1]}))
+        else
+            apuesta=${bets[0]}
+        fi
+        money=$(($money - $apuesta))
+
+        #Opcion de PAR
+        if [ "$par_impar" == "par" ]; then
+            if [ "$randomNumber" -eq 0 ]; then
+                echo -e "${redColour}[!] ${endColour}${blueColour}PERDIMOS!!${endColour}${yellowColour} 0 ${endColour}\n"
+                unset bets[0]
+                unset bets[-1]
+                bets=(${bets[@]}) #--> Hago reset del index
+                echo "el largo es ${#bets[@]}"
+                echo "En posicion 0 tenemos ${bets[1]}"
+                
+            fi
+            if [ "$(($randomNumber % 2))" -eq 0 ]; then
+                
+
+               
+            else
+                
+
+                
+            fi
+            #Opcion de IMPAR
+        elif [ "$par_impar" == "impar" ]; then
+            echo " es impar"
+            exit 0
+        else
+            echo -e "${redColour}[!] Atención!${endColour}${greenColour} Debes elegir entre: "par" o "impar" ${endColour}\n"
+            labouchere
+        fi
+
+    done
+    tput cnorm
 }
 
 while getopts "m:t:h" argumentos; do
