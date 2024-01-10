@@ -122,7 +122,7 @@ function labouchere() {
     apuesta=""
 
     while true; do
-        if [ "$money" -gt 500 ]; then 
+        if [ "$money" -gt 500 ]; then
             echo -e "\n ${BlueColour}[!!!!!!]${endColour}${greenColour} Has Ganado suficiente, te retiras!!!${endColour}\n"
             echo -e "\n ${greenColour} Te llevas a casa${endColour} ${purpleColour} $money ${endColour} ${greenColour} Mangos!! ${endColour}\n"
             sleep 3
@@ -133,7 +133,7 @@ function labouchere() {
             sleep 3
             tput cnorm
             exit 0
-        fi 
+        fi
 
         #Defino el valor de la variable "apuesta"
         if [ "${#numbers[@]}" -gt 1 ]; then
@@ -155,20 +155,8 @@ function labouchere() {
 
         #Opcion de PAR
         if [ "$par_impar" == "par" ]; then
-            if [ "$randomNumber" -eq 0 ]; then
-                echo -e "${redColour}[!] ${endColour}${blueColour}PERDIMOS!!${endColour}${yellowColour} 0 ${endColour}\n"
-                if [ "${#numbers[@]}" -eq 1 ]; then
-                    unset numbers[0]
-                else
-                    unset numbers[0]
-                    unset numbers[-1]
-                fi
-                numbers=(${numbers[@]}) #--> Hago reset del index
-                echo -e "\t Secuencia --> ${numbers[@]}  \n"
-                echo -e "\n${yellowColour}[+] MONTO: ${endColour}${purpleColour} $money${endColour}"
-                sleep 1
 
-            elif [ "$(($randomNumber % 2))" -eq 0 ]; then
+            if [ "$(($randomNumber % 2))" -eq 0 ] && [ "$randomNumber" -ne 0 ]; then
                 echo -e "\n ${yellowColour}[+]${endColour}${greenColour} Ganaste! El numero es par${endColour} ${blueColour}$randomNumber${endColour}\n"
                 numbers+=($apuesta)         #Agrego la apuesta al array.
                 reward="$(($apuesta * 2))"  #Dinero ganado
@@ -177,7 +165,7 @@ function labouchere() {
                 echo -e "\n ${yellowColour}[+] MONTO: ${endColour}${purpleColour} $money${endColour}"
                 sleep 1
             else
-                echo -e "\n ${redColour}[-]${endColour}${purpleColour}Perdiste!! el Numero es impar ${endColour} ${blueColour}$randomNumber${endColour}\n"
+                echo -e "\n ${redColour}[-]${endColour}${purpleColour}Perdiste!! el Numero es: ${endColour} ${blueColour}$randomNumber${endColour}\n"
 
                 if [ "${#numbers[@]}" -eq 1 ]; then
                     unset numbers[0]
@@ -193,19 +181,8 @@ function labouchere() {
             #Opcion de IMPAR
         elif [ "$par_impar" == "impar" ]; then
 
-            if [ "$randomNumber" -eq 0 ]; then
-                echo -e "${redColour}[!] ${endColour}${blueColour}PERDIMOS!!${endColour}${yellowColour} 0 ${endColour}\n"
-                if [ "${#numbers[@]}" -eq 1 ]; then
-                    unset numbers[0]
-                else
-                    unset numbers[0]
-                    unset numbers[-1]
-                fi
-                numbers=(${numbers[@]}) #--> Hago reset del index
-                echo -e "\t Secuencia --> ${numbers[@]}  \n"
-               sleep 1
-            elif [ "$(($randomNumber % 2))" -eq 0 ]; then
-                echo -e "\n ${redColour}[-]${endColour}${purpleColour} Perdiste!! el Numero es par: ${endColour} ${blueColour}$randomNumber${endColour}\n"
+            if [ "$(($randomNumber % 2))" -eq 0 ] || [ "$randomNumber" -eq 0 ]; then
+                echo -e "\n ${redColour}[-]${endColour}${purpleColour} Perdiste!! el Numero es: ${endColour} ${blueColour}$randomNumber${endColour}\n"
 
                 if [ "${#numbers[@]}" -eq 1 ]; then
                     unset numbers[0]
@@ -218,18 +195,18 @@ function labouchere() {
                 echo -e "\n${yellowColour}[+] MONTO: ${endColour}${purpleColour} $money${endColour}"
                 sleep 1
             else
-                echo -e "\n ${yellowColour}[+]${endColour}${greenColour} Ganaste! El numero es impar: ${endColour} ${blueColour}$randomNumber${endColour}\n"
+                echo -e "\n ${yellowColour}[+]${endColour}${greenColour} Ganaste! El numero es: ${endColour} ${blueColour}$randomNumber${endColour}\n"
                 numbers+=($apuesta)         #Agrego la apuesta al array.
                 reward="$(($apuesta * 2))"  #Dinero ganado
                 money=$(($money + $reward)) #monto actualizado
                 echo -e "\t Secuencia --> ${numbers[@]}  \n"
                 echo -e "\n${yellowColour}[+] MONTO: ${endColour}${purpleColour} $money${endColour}"
-               sleep 1
+                sleep 1
             fi
 
         else
             echo -e "\n${redColour}[!] Atención!${endColour}${greenColour} Debes elegir entre: "par" o "impar" ${endColour}\n"
-            
+
             labouchere
         fi
 
